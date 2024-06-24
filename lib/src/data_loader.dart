@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 mixin DataLoader<T extends StatefulWidget> on State<T> {
-  bool isDataValid();
+  bool isValid();
 
   bool isError();
 
@@ -13,7 +13,7 @@ mixin DataLoader<T extends StatefulWidget> on State<T> {
   Widget loadErrorWidgetBuilder(void Function() retryCallback);
 
   void setRebuildIfValid() {
-    if (isDataValid() || isError()) {
+    if (isValid() || isError()) {
       setStateEnsureMount();
     }
   }
@@ -35,7 +35,7 @@ mixin DataLoader<T extends StatefulWidget> on State<T> {
         setStateEnsureMount();
       });
     }
-    if (!isDataValid()) {
+    if (!isValid()) {
       return loadingWidgetBuilder();
     }
     return buildContents(context);
