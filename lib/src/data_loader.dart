@@ -1,19 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-mixin DataLoader<T extends StatefulWidget> on State<T> {
+mixin DataLoader<T extends StatefulWidget, E> on State<T> {
   bool isValid();
 
-  bool isError();
+  E? error();
 
   void retry();
 
   Widget loadingWidgetBuilder();
 
-  Widget loadErrorWidgetBuilder(void Function() retryCallback);
+  Widget loadErrorWidgetBuilder(E? err, void Function() retryCallback);
 
   void setRebuildIfValid() {
-    if (isValid() || isError()) {
+    if (isValid() || error() != null) {
       setStateEnsureMount();
     }
   }
@@ -29,8 +29,9 @@ mixin DataLoader<T extends StatefulWidget> on State<T> {
   @override
   @nonVirtual
   Widget build(BuildContext context) {
-    if (isError()) {
-      return loadErrorWidgetBuilder(() {
+    final err = error();
+    if (err != null) {
+      return loadErrorWidgetBuilder(err, () {
         retry();
         setStateEnsureMount();
       });
