@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -6,11 +8,11 @@ mixin DataLoader<T extends StatefulWidget, E> on State<T> {
 
   E? error();
 
-  void retry();
+  FutureOr<void> retry();
 
   Widget loadingWidgetBuilder();
 
-  Widget loadErrorWidgetBuilder(E? err, void Function() retryCallback);
+  Widget loadErrorWidgetBuilder(E? err, FutureOr<void> Function() retryCallback);
 
   void setRebuildIfValid() {
     if (isValid() || error() != null) {
@@ -31,9 +33,9 @@ mixin DataLoader<T extends StatefulWidget, E> on State<T> {
   Widget build(BuildContext context) {
     final err = error();
     if (err != null) {
-      return loadErrorWidgetBuilder(err, () {
-        retry();
+      return loadErrorWidgetBuilder(err, () async {
         setStateEnsureMount();
+        await retry();
       });
     }
     if (!isValid()) {
