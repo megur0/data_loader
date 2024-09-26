@@ -12,7 +12,7 @@ mixin DataLoader<T extends StatefulWidget, E> on State<T> {
 
   Widget loadingWidgetBuilder();
 
-  Widget loadErrorWidgetBuilder(E? err, FutureOr<void> Function() retryCallback);
+  Widget loadErrorWidgetBuilder(E err, FutureOr<void> Function() retryCallback);
 
   void setRebuildIfValid() {
     if (isValid() || error() != null) {
